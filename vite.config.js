@@ -1,10 +1,22 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
+  plugins: [react()],
   optimizeDeps: {
     include: ['lucide-react'],
   },
-  plugins: [react()],
-})
+  build: {
+    commonjsOptions: {
+      include: [/node_modules/],
+    },
+    rollupOptions: {
+      // Ensure that lucide-react isn’t accidentally marked as external.
+      external: [],
+    },
+  },
+  // If using SSR or if Vite is skipping bundling for some reason:
+  ssr: {
+    noExternal: ['lucide-react'],
+  },
+});
