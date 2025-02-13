@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import Confetti from "react-confetti";
 import html2canvas from "html2canvas";
-import { Share2 } from "lucide-react";
 
 // Merged Entrance Banner with Subscribe-style Start Button
 function EntranceBanner({ onStart }) {
@@ -101,18 +100,20 @@ export default function App() {
 
   // Update window dimensions on mount and on resize
   useEffect(() => {
-    setWindowDimensions({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-    const handleResize = () => {
+    if (typeof window !== "undefined") {
       setWindowDimensions({
         width: window.innerWidth,
         height: window.innerHeight,
       });
-    };
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+      const handleResize = () => {
+        setWindowDimensions({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
   }, []);
 
   // Listen for device orientation events to control wind
@@ -149,7 +150,7 @@ export default function App() {
     if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
     if (removeTimerRef.current) clearTimeout(removeTimerRef.current);
 
-    // Increase gravity for a fun effect on each tap and update confetti count
+    // Increase gravity for a fun effect on each tap
     setGravityValue((prev) => prev + 0.05);
     setConfettiCount((prev) => prev + 50);
     setTapCount((prev) => prev + 1);
@@ -219,14 +220,15 @@ export default function App() {
           </div>
         )}
       </div>
-      {/* Show share button (icon) after 10 taps */}
+      {/* Show share button after 10 taps */}
       {tapCount >= 10 && (
         <button
-          onClick={handleShare}
-          className="fixed bottom-4 right-4 p-4 bg-green-500 text-white rounded-full shadow-lg z-50"
-        >
-          <Share2 className="w-6 h-6" />
-        </button>
+        onClick={handleShare}
+        className="select-none fixed bottom-4 right-4 px-4 py-2 bg-green-500 text-white rounded-full shadow-lg z-50"
+      >
+        <img src="share.png" alt="Share" className="w-6 h-6" />
+      </button>
+      
       )}
     </div>
   );
